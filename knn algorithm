@@ -1,0 +1,38 @@
+diabets data sets
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import os  
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
+df = pd.read_csv(r"C:\Users\HP\Downloads\diabetes.csv")
+df.head()
+print(len(df))
+zero_not_acceppted = ['Glucose','BloodPressure','SkinThickness','L','BMI']
+for column in zero_not_acceppted:
+    df[column]= df[column].replace(0,np.NaN)
+    mean = int(df[column].mean(skipna=True))
+    df[column]=df[column].replace(np.NaN,mean)
+    X= df.iloc[:,0:8]
+y = df.iloc[:,8]
+X_train,y_train,X_test,y_test =train_test_split(x,y,random_state=0,test_size=0.2)
+# FEATURE SCALING 
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+#model in knn
+classifier = KNeighborsClassifier(n_neighbors=11,p=2,metric='euclidean')
+import math
+math.sqrt(len(y_test)) # n=12.40967 will become n_neigbours become 11
+print(len(y))
+print(len(X))
+classifier.fit(X_train,y_train)
+y_pred = classifier.predict(X_test)
+a = confusion_matrix(y_test,y_pred)
+print(a)
+print(f1_score(y_test,y_pred))
+print(accuracy_score(y_test,y_pred)) 
